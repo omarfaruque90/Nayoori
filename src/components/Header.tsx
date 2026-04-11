@@ -1,14 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/lib/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/lib/supabase/client";
+import { fetchSiteSettings } from "@/lib/supabase/settings";
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
 
 export default function Header() {
   const { openCart, cartCount } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch Categories
+        const { data: catData, error: catError } = await supabase
+          .from("categories")
+          .select("id, name, slug")
+          .order("name", { ascending: true });
+
+        if (catError) throw catError;
+        if (catData) setCategories(catData);
+
+        // Fetch Logo
+        const settings = await fetchSiteSettings();
+        if (settings.logo_url) setLogoUrl(settings.logo_url);
+      } catch (err) {
+        console.error("Error fetching header data:", err);
+      }
+    }
+    fetchData();
+  }, []);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -25,17 +57,35 @@ export default function Header() {
         </button>
 
         {/* Logo */}
-        <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="mx-auto md:mx-0 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-          <h1 className="font-serif text-3xl font-bold tracking-widest text-gray-900 uppercase hover:text-gray-600 transition-colors cursor-pointer">
+        <Link 
+          href="/" 
+          onClick={() => setIsMobileMenuOpen(false)} 
+          className="mx-auto md:mx-0 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 group flex items-center gap-3"
+        >
+          {logoUrl && (
+            <motion.img 
+              whileHover={{ scale: 1.05 }}
+              src={logoUrl} 
+              alt="Nayoori Logo" 
+              className="h-8 md:h-10 w-auto object-contain cursor-pointer"
+            />
+          )}
+          <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-widest text-gray-900 uppercase group-hover:text-gray-600 transition-colors cursor-pointer">
             Nayoori
           </h1>
         </Link>
         
         {/* Desktop Nav */}
         <nav className="hidden md:flex gap-8 font-sans text-sm tracking-widest text-gray-600 uppercase">
-          <Link href="/saree" className="hover:text-gray-900 transition-colors">Saree</Link>
-          <Link href="/kurti" className="hover:text-gray-900 transition-colors">Kurti</Link>
-          <Link href="/western" className="hover:text-gray-900 transition-colors">Western</Link>
+          {categories.map((category) => (
+            <Link 
+              key={category.id} 
+              href={`/${category.slug}`} 
+              className="hover:text-gray-900 transition-colors"
+            >
+              {category.name}
+            </Link>
+          ))}
         </nav>
 
         {/* Cart Icon */}
@@ -66,9 +116,16 @@ export default function Header() {
             className="fixed inset-0 top-[73px] bg-white z-30 flex flex-col items-center justify-start pt-12 space-y-8 md:hidden"
           >
             <nav className="flex flex-col items-center gap-8 font-serif text-2xl text-gray-900 uppercase tracking-widest">
-              <Link href="/saree" onClick={toggleMobileMenu} className="hover:text-gray-500 transition-colors">Saree Collection</Link>
-              <Link href="/kurti" onClick={toggleMobileMenu} className="hover:text-gray-500 transition-colors">Kurti Collection</Link>
-              <Link href="/western" onClick={toggleMobileMenu} className="hover:text-gray-500 transition-colors">Western Wear</Link>
+              {categories.map((category) => (
+                <Link 
+                  key={category.id} 
+                  href={`/${category.slug}`} 
+                  onClick={toggleMobileMenu} 
+                  className="hover:text-gray-500 transition-colors"
+                >
+                  {category.name} Collection
+                </Link>
+              ))}
             </nav>
             <button 
               onClick={toggleMobileMenu}

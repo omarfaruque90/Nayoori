@@ -8,8 +8,10 @@ export default function CustomCursor() {
   const [cursorText, setCursorText] = useState("");
   const [isHovering, setIsHovering] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Only run on desktop/devices with a mouse
     if (window.matchMedia("(pointer: coarse)").matches) {
       setIsDesktop(false);
@@ -37,6 +39,7 @@ export default function CustomCursor() {
     return () => window.removeEventListener("mousemove", mouseMove);
   }, []);
 
+  if (!mounted) return null;
   if (!isDesktop) return null;
 
   return (

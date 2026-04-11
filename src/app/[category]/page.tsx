@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import { ShoppingBag } from "lucide-react";
-import Link from "next/link";
 import CategoryView from "@/components/CategoryView";
-import { mockProducts } from "@/lib/mockProducts";
+import { fetchProducts, type MappedProduct } from "@/lib/supabase/products";
+
+export const dynamic = "force-dynamic"; // Always fetch fresh data from Supabase
 
 export default async function CategoryPage({
   params,
@@ -17,8 +17,14 @@ export default async function CategoryPage({
     notFound();
   }
 
-  // Filter products by the current category string in URL
-  const products = mockProducts.filter((p) => p.category === category.toLowerCase());
+  // Fetch products from Supabase filtered by category
+  let products: MappedProduct[];
+  try {
+    products = await fetchProducts(category.toLowerCase());
+  } catch (err) {
+    console.error("Failed to fetch products:", err);
+    products = [];
+  }
 
   // Dynamic Backgrounds for Brand Flow
   const categoryBackgrounds: Record<string, string> = {
@@ -46,4 +52,3 @@ export default async function CategoryPage({
     </div>
   );
 }
-

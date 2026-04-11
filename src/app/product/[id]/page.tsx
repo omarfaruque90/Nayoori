@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { mockProducts } from "@/lib/mockProducts";
+import { fetchProductById, type MappedProduct } from "@/lib/supabase/products";
 import ProductDetailView from "@/components/ProductDetailView";
 import ReviewSection from "@/components/ReviewSection";
+
+export const dynamic = "force-dynamic"; // Always fetch fresh data from Supabase
 
 export default async function ProductPage({
   params,
@@ -12,8 +14,14 @@ export default async function ProductPage({
 }) {
   const { id } = await params;
 
-  // Find the product in our mock DB
-  const product = mockProducts.find((p) => p.id === id);
+  // Fetch the product from Supabase
+  let product: MappedProduct | null;
+  try {
+    product = await fetchProductById(id);
+  } catch {
+    // Product not found or Supabase error
+    product = null;
+  }
 
   if (!product) {
     return (

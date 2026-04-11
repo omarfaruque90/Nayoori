@@ -6,13 +6,14 @@ import { useCart } from "@/lib/CartContext";
 import { supabase } from "@/lib/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart } = useCart();
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successOrderId, setSuccessOrderId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -62,8 +63,11 @@ export default function CheckoutPage() {
         throw error;
       }
 
-      setSuccessOrderId(data?.id || `ORD-${Math.floor(Math.random() * 1000000)}`);
+      const orderId = data?.id || "unknown";
       clearCart();
+
+      // Redirect to the success page
+      router.push(`/success?orderId=${orderId}&total=${finalTotal}`);
 
     } catch (error: any) {
       console.error("Order submission failed:", error.message);
@@ -75,34 +79,7 @@ export default function CheckoutPage() {
 
   if (!isClient) return null;
 
-  // SUCCESS STATE
-  if (successOrderId) {
-    return (
-      <div className="flex-grow container mx-auto px-6 py-20 flex flex-col items-center justify-center min-h-[70vh]">
-        <motion.div 
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", bounce: 0.5 }}
-          className="text-center p-12 bg-white rounded-3xl shadow-xl shadow-warm-beige border border-warm-beige max-w-lg w-full"
-        >
-          <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-500" />
-          </div>
-          <h2 className="font-serif text-4xl text-gray-900 mb-4">Thank You</h2>
-          <p className="font-sans text-gray-600 mb-6">Your Nayoori order has been elegantly placed.</p>
-          <div className="bg-warm-beige/20 p-4 rounded-xl mb-8">
-            <p className="font-sans text-xs tracking-widest text-gray-500 uppercase mb-1">Order ID</p>
-            <p className="font-sans text-lg font-medium text-gray-900 break-all">{successOrderId}</p>
-          </div>
-          <Link href="/">
-            <button className="px-8 py-4 bg-gray-900 text-white font-sans uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors w-full">
-              Continue Shopping
-            </button>
-          </Link>
-        </motion.div>
-      </div>
-    );
-  }
+  // Redirect handled by router.push above
 
   // EMPTY CART GUARD
   if (cartItems.length === 0) {
