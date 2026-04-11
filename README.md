@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Nayoori - Premium E-commerce Platform
+Project Overview
+Nayoori is a luxury fashion e-commerce platform built with Next.js and Supabase.
 
-## Getting Started
+Recent Updates & Features
+• Dynamic Branding System: Fully integrated favicon and logo management via Admin Dashboard.
 
-First, run the development server:
+• Client-Side Favicon Guard: Implemented a custom injector to bypass aggressive browser caching.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+• Legal Infrastructure: Added professional Privacy Policy and Terms & Conditions pages compliant with Bangladesh e-commerce regulations.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+• Refined UI: Clean, minimalist footer with professional developer credit ("Architected by Omar The Bhaijan") linked to portfolio.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tech Stack & Installations
+• Framework: Next.js 14+ (App Router)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+• Database & Auth: Supabase
 
-## Learn More
+• Styling: Tailwind CSS, Lucide React
 
-To learn more about Next.js, take a look at the following resources:
+• Icons: Custom dynamic icons with cache-busting logic.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Getting Started
+1. Clone the repository: `git clone <repo-url>`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Install dependencies: `npm install`
 
-## Deploy on Vercel
+3. Environment Variables: Setup `.env.local` with Supabase URL and Anon Key.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Run development server: `npm run dev`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Key Files
+• `src/app/layout.tsx`: Root layout with dynamic metadata and FaviconInjector.
+
+• `src/components/layout/Footer.tsx`: Updated minimalist footer.
+
+• `src/app/privacy-policy/page.tsx`: Legal documentation.
+
+• `src/app/terms-and-conditions/page.tsx`: Legal documentation.
