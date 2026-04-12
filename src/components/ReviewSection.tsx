@@ -127,7 +127,7 @@ export default function ReviewSection({ productId }: ReviewSectionProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className="mt-24 border-t border-warm-beige pt-16"
+      className="mt-24 border-t border-warm-beige pt-16 overflow-hidden"
     >
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">

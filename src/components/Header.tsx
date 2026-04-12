@@ -46,7 +46,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="w-full py-5 px-6 md:px-10 flex justify-between items-center border-b border-warm-beige bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-sm">
+      <header className="w-full py-5 px-6 md:px-10 flex justify-between items-center border-b border-warm-beige bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-sm overflow-hidden">
         
         {/* Mobile Hamburger */}
         <button 

@@ -63,7 +63,7 @@ export default function BannerSlider() {
   if (banners.length === 0) return null;
 
   return (
-    <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-warm-beige/20 group">
+    <div className="relative w-full max-w-full aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-warm-beige/20 group">
       <AnimatePresence mode="wait">
         <motion.div
           key={banners[currentIndex].id}

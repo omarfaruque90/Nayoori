@@ -60,12 +60,12 @@ export default async function RootLayout({
         <link id="dynamic-favicon" rel="icon" href={`${faviconUrl}${cacheBuster}`} />
         <link rel="shortcut icon" href={`${faviconUrl}${cacheBuster}`} />
       </head>
-      <body className="font-sans min-h-full flex flex-col bg-[#fdfbf7] custom-cursor-enabled" suppressHydrationWarning>
+      <body className="font-sans min-h-full flex flex-col bg-[#fdfbf7] custom-cursor-enabled overflow-x-hidden" suppressHydrationWarning>
         <FaviconInjector />
         <CustomCursor />
         <CartProvider>
           <Header />
-          <div className="flex-grow flex flex-col" suppressHydrationWarning>
+          <div className="flex-grow flex flex-col overflow-x-hidden" suppressHydrationWarning>
             {children}
           </div>
           <Footer />
