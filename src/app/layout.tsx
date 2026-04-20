@@ -27,7 +27,7 @@ export const revalidate = 0; // Force dynamic updates for metadata
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await fetchSiteSettings();
   const iconUrl = settings.favicon_url || "/favicon.ico";
-  
+
   return {
     title: "Nayoori | Elegant Women's Clothing",
     description: "Experience the Antigravity Collection by Nayoori",
@@ -79,5 +79,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
-

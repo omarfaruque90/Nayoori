@@ -48,9 +48,9 @@ export default function Header() {
   return (
     <>
       <header className="w-full py-5 px-6 md:px-10 flex justify-between items-center border-b border-warm-beige bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-sm overflow-hidden">
-        
+
         {/* Mobile Hamburger */}
-        <button 
+        <button
           className="md:hidden p-2 -ml-2 text-gray-700 hover:text-gray-900 transition-colors"
           onClick={toggleMobileMenu}
         >
@@ -58,16 +58,16 @@ export default function Header() {
         </button>
 
         {/* Logo */}
-        <Link 
-          href="/" 
-          onClick={() => setIsMobileMenuOpen(false)} 
+        <Link
+          href="/"
+          onClick={() => setIsMobileMenuOpen(false)}
           className="mx-auto md:mx-0 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 group flex items-center gap-3"
         >
           {logoUrl && (
-            <motion.img 
+            <motion.img
               whileHover={{ scale: 1.05 }}
-              src={logoUrl} 
-              alt="Nayoori Logo" 
+              src={logoUrl}
+              alt="Nayoori Logo"
               className="h-8 md:h-10 w-auto object-contain cursor-pointer"
             />
           )}
@@ -75,13 +75,13 @@ export default function Header() {
             Nayoori
           </h1>
         </Link>
-        
+
         {/* Desktop Nav */}
         <nav className="hidden md:flex gap-8 font-sans text-sm tracking-widest text-gray-600 uppercase">
           {categories.map((category) => (
-            <Link 
-              key={category.id} 
-              href={`/${category.slug}`} 
+            <Link
+              key={category.id}
+              href={`/${category.slug}`}
               className="hover:text-gray-900 transition-colors"
             >
               {category.name}
@@ -92,8 +92,8 @@ export default function Header() {
         {/* Cart Icon & Auth */}
         <div className="flex items-center gap-4">
           <GoogleLoginButton />
-          <button 
-            onClick={openCart} 
+          <button
+            onClick={openCart}
             className="relative p-3 -mr-3 text-gray-700 hover:text-gray-900 transition-colors"
             aria-label="Open cart"
           >
@@ -119,17 +119,17 @@ export default function Header() {
           >
             <nav className="flex flex-col items-center gap-8 font-serif text-2xl text-gray-900 uppercase tracking-widest">
               {categories.map((category) => (
-                <Link 
-                  key={category.id} 
-                  href={`/${category.slug}`} 
-                  onClick={toggleMobileMenu} 
+                <Link
+                  key={category.id}
+                  href={`/${category.slug}`}
+                  onClick={toggleMobileMenu}
                   className="hover:text-gray-500 transition-colors"
                 >
                   {category.name} Collection
                 </Link>
               ))}
             </nav>
-            <button 
+            <button
               onClick={toggleMobileMenu}
               className="mt-8 p-4 bg-warm-beige/20 rounded-full text-gray-600 hover:bg-warm-beige hover:text-gray-900 transition-all"
             >
@@ -141,4 +141,3 @@ export default function Header() {
     </>
   );
 }
-

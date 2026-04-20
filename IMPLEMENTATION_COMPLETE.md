@@ -80,7 +80,7 @@ Your Nayoori e-commerce platform now has a fully functional Google OAuth authent
   - Pre-filled form with Google data
   - Streamlined UX
   - Single-step submission
-  
+
 - **Guest Checkout** (for non-authenticated users)
   - Complete form with all fields
   - Original checkout flow preserved

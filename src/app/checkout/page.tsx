@@ -52,7 +52,7 @@ export default function CheckoutPage() {
           <ArrowLeft className="w-4 h-4" /> Back to Shop
         </Link>
 
-        <motion.div 
+        <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -75,11 +75,11 @@ export default function CheckoutPage() {
 }
 
 // Guest Checkout Component
-function GuestCheckout({ 
-  cartItems, 
-  cartTotal 
-}: { 
-  cartItems: any[]; 
+function GuestCheckout({
+  cartItems,
+  cartTotal
+}: {
+  cartItems: any[];
   cartTotal: number;
 }) {
   const { clearCart } = useCart();
@@ -145,7 +145,7 @@ function GuestCheckout({
         <ArrowLeft className="w-4 h-4" /> Back to Shop
       </Link>
 
-      <motion.div 
+      <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -157,36 +157,36 @@ function GuestCheckout({
           <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="block text-sm font-sans tracking-widest uppercase text-gray-500">Full Name</label>
-              <input 
-                required 
-                type="text" 
-                name="fullName" 
+              <input
+                required
+                type="text"
+                name="fullName"
                 value={formData.fullName}
-                onChange={handleChange} 
-                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans" 
+                onChange={handleChange}
+                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans"
                 placeholder="Enter your full name"
               />
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-sans tracking-widest uppercase text-gray-500">Mobile Number</label>
-              <input 
-                required 
-                type="tel" 
-                name="phoneNumber" 
+              <input
+                required
+                type="tel"
+                name="phoneNumber"
                 value={formData.phoneNumber}
-                onChange={handleChange} 
-                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans" 
+                onChange={handleChange}
+                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans"
                 placeholder="e.g. 017XXXXXXXX"
               />
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-sans tracking-widest uppercase text-gray-500">Delivery Area</label>
-              <select 
-                name="deliveryArea" 
-                onChange={handleChange} 
-                value={formData.deliveryArea} 
+              <select
+                name="deliveryArea"
+                onChange={handleChange}
+                value={formData.deliveryArea}
                 className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans appearance-none"
               >
                 <option value="Dhaka">Inside Dhaka - ৳80</option>
@@ -196,12 +196,12 @@ function GuestCheckout({
 
             <div className="space-y-2">
               <label className="block text-sm font-sans tracking-widest uppercase text-gray-500">Full Delivery Address</label>
-              <textarea 
-                required 
-                name="fullAddress" 
-                rows={4} 
+              <textarea
+                required
+                name="fullAddress"
+                rows={4}
                 value={formData.fullAddress}
-                onChange={handleChange} 
+                onChange={handleChange}
                 className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans resize-none"
                 placeholder="Enter your apartment, street, and area details"
               ></textarea>
@@ -224,11 +224,11 @@ interface OrderSummaryProps {
   isSubmitting?: boolean;
 }
 
-function OrderSummary({ 
-  cartItems, 
-  cartTotal, 
+function OrderSummary({
+  cartItems,
+  cartTotal,
   showSubmit = true,
-  isSubmitting = false 
+  isSubmitting = false
 }: OrderSummaryProps) {
   const deliveryCharge = 80; // Default for Dhaka
   const finalTotal = cartTotal + deliveryCharge;
@@ -237,7 +237,7 @@ function OrderSummary({
     <div className="w-full lg:w-[450px]">
       <div className="bg-warm-beige/10 p-8 border border-warm-beige rounded-2xl sticky top-32">
         <h2 className="font-serif text-2xl text-gray-900 mb-6">Order Summary</h2>
-        
+
         {/* Cart Items */}
         <div className="space-y-4 mb-6 max-h-[300px] overflow-y-auto scrollbar-hide pr-2">
           {cartItems.map((item) => (
@@ -274,8 +274,8 @@ function OrderSummary({
 
         {showSubmit && (
           <>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               form="checkout-form"
               disabled={isSubmitting}
               className="w-full mt-8 py-5 bg-gray-900 text-white font-sans uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed shadow-xl shadow-gray-900/10"

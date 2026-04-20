@@ -57,8 +57,8 @@ ALTER TABLE orders ADD COLUMN user_id UUID;
 ALTER TABLE orders ADD COLUMN email TEXT;
 
 -- Create foreign key constraint
-ALTER TABLE orders 
-ADD CONSTRAINT orders_user_id_fkey 
+ALTER TABLE orders
+ADD CONSTRAINT orders_user_id_fkey
 FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 
 -- Update RLS policies to allow authenticated users
@@ -141,7 +141,7 @@ CREATE POLICY "admins_can_view_orders" ON orders
 
 ### Google Login Button
 - **Location**: Header (top right, next to cart)
-- **States**: 
+- **States**:
   - Not logged in: Blue "Sign In with Google" button
   - Logged in: Shows email + logout icon
 - **Styling**: Responsive, matches design system
