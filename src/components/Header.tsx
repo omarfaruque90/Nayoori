@@ -7,6 +7,7 @@ import { useCart } from "@/lib/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
 import { fetchSiteSettings } from "@/lib/supabase/settings";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 interface Category {
   id: string;
