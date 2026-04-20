@@ -85,9 +85,12 @@ function GuestCheckout({
   const { clearCart } = useCart();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isInitializingPayment, setIsInitializingPayment] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
+    email: "",
     phoneNumber: "",
     deliveryArea: "Dhaka",
     fullAddress: "",
@@ -98,6 +101,7 @@ function GuestCheckout({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMessage(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,37 +109,75 @@ function GuestCheckout({
     if (cartItems.length === 0) return;
 
     setIsSubmitting(true);
+    setErrorMessage(null);
 
     try {
-      const { data, error } = await supabase
+      // Step 1: Create order in Supabase
+      const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert([
           {
             full_name: formData.fullName,
+            email: formData.email,
             phone_number: formData.phoneNumber,
             delivery_area: formData.deliveryArea,
             full_address: formData.fullAddress,
             cart_items: cartItems,
             total_amount: finalTotal,
-            status: "Pending"
+            status: "Pending",
+            payment_status: "pending",
           }
         ])
         .select()
         .single();
 
-      if (error) {
-        throw error;
+      if (orderError) {
+        throw orderError;
       }
 
-      const orderId = data?.id || "unknown";
+      const orderId = orderData?.id;
+
+      // Step 2: Initialize payment with SSLCommerz
+      setIsInitializingPayment(true);
+
+      const paymentResponse = await fetch('/api/payment/init', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          userId: null,
+          totalAmount: finalTotal,
+          deliveryCharge,
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          customerPhone: formData.phoneNumber,
+          customerAddress: formData.fullAddress,
+          deliveryArea: formData.deliveryArea,
+        }),
+      });
+
+      const paymentData = await paymentResponse.json();
+
+      if (!paymentResponse.ok || !paymentData.success) {
+        throw new Error(paymentData.error || 'Failed to initialize payment');
+      }
+
+      // Step 3: Clear cart and redirect to SSLCommerz
       clearCart();
 
-      router.push(`/success?orderId=${orderId}&total=${finalTotal}`);
+      setTimeout(() => {
+        if (paymentData.redirectUrl) {
+          window.location.href = paymentData.redirectUrl;
+        } else {
+          throw new Error('No redirect URL from payment gateway');
+        }
+      }, 1000);
     } catch (error: any) {
-      console.error("Order submission failed:", error.message);
-      alert("Something went wrong with the submission. Please try again.");
+      console.error("Checkout error:", error);
+      setErrorMessage(error.message || "Checkout failed. Please try again.");
     } finally {
       setIsSubmitting(false);
+      setIsInitializingPayment(false);
     }
   };
 
