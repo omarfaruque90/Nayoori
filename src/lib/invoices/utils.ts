@@ -1,4 +1,5 @@
 import { ReactPDF } from '@react-pdf/renderer';
+import React from 'react';
 import InvoicePDF from './generateInvoice';
 import { createClient } from '@supabase/supabase-js';
 
@@ -37,8 +38,8 @@ export async function generateAndSaveInvoice(invoiceData: InvoiceData): Promise<
       auth: { persistSession: false },
     });
 
-    // Generate PDF blob
-    const pdfBlob = await ReactPDF.pdf(<InvoicePDF data={invoiceData} />).toBlob();
+    // Generate PDF blob using React.createElement
+    const pdfBlob = await ReactPDF.pdf(React.createElement(InvoicePDF, { data: invoiceData })).toBlob();
 
     // Create unique filename
     const timestamp = new Date().getTime();
