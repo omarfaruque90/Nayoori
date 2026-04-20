@@ -381,7 +381,7 @@ function OrderSummary({
               disabled={isSubmitting}
               className="w-full mt-8 py-5 bg-gray-900 text-white font-sans uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed shadow-xl shadow-gray-900/10"
             >
-              {isSubmitting ? "Processing..." : "Confirm Final Order"}
+              {isSubmitting ? "Processing Payment..." : "Pay Now"}
             </button>
             <p className="text-center font-sans text-xs text-gray-400 mt-4 leading-relaxed">
               By confirming, you agree to Nayoori's Terms of Service and Privacy Policy.
