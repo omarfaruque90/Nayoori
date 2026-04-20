@@ -70,6 +70,28 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Send order confirmation email with invoice
+    // This runs in the background and doesn't block the redirect
+    if (orderData) {
+      try {
+        await sendOrderConfirmationEmail({
+          id: orderData.id,
+          full_name: orderData.full_name,
+          email: orderData.email,
+          phone_number: orderData.phone_number,
+          items: orderData.items || [],
+          total_amount: orderData.total_amount,
+          delivery_area: orderData.delivery_area,
+          full_address: orderData.full_address,
+          created_at: orderData.created_at,
+          transaction_id: transactionId,
+        });
+      } catch (emailError) {
+        console.error('Failed to send order confirmation email:', emailError);
+        // Don't block the redirect even if email fails
+      }
+    }
+
     // Log successful payment
     console.log('Payment successful for order:', orderId, {
       transactionId,
