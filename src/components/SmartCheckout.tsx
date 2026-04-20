@@ -143,6 +143,33 @@ export default function SmartCheckout() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
     >
+      {/* Loading Spinner - Payment Initialization */}
+      <AnimatePresence>
+        {isInitializingPayment && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-lg p-8 flex flex-col items-center gap-4"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              >
+                <Loader className="w-8 h-8 text-blue-600" />
+              </motion.div>
+              <p className="text-gray-900 font-medium">Initializing payment...</p>
+              <p className="text-sm text-gray-600">Redirecting to payment gateway</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Success Message */}
       <AnimatePresence>
         {showSuccess && (
@@ -153,7 +180,21 @@ export default function SmartCheckout() {
             exit={{ opacity: 0 }}
           >
             <Check className="w-5 h-5 text-green-600" />
-            <p className="text-green-700 font-medium">Order placed successfully!</p>
+            <p className="text-green-700 font-medium">Order created! Redirecting to payment...</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Error Message */}
+      <AnimatePresence>
+        {errorMessage && (
+          <motion.div
+            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <p className="text-red-700 font-medium">{errorMessage}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -179,7 +220,8 @@ export default function SmartCheckout() {
             name="fullName"
             value={formData.fullName}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            disabled={isSubmitting}
+            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors disabled:bg-gray-100"
             placeholder="Enter your full name"
           />
         </div>
@@ -195,7 +237,8 @@ export default function SmartCheckout() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            disabled={isSubmitting}
+            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors disabled:bg-gray-100"
             placeholder="Enter your email"
           />
         </div>
@@ -211,7 +254,8 @@ export default function SmartCheckout() {
             name="phoneNumber"
             value={formData.phoneNumber}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            disabled={isSubmitting}
+            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors disabled:bg-gray-100"
             placeholder="Enter your phone number"
           />
         </div>
@@ -225,7 +269,8 @@ export default function SmartCheckout() {
             name="deliveryArea"
             value={formData.deliveryArea}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            disabled={isSubmitting}
+            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors disabled:bg-gray-100"
           >
             <option value="Dhaka">Dhaka (Inside) - ৳80</option>
             <option value="Outside Dhaka">Outside Dhaka - ৳150</option>
@@ -242,8 +287,9 @@ export default function SmartCheckout() {
             name="fullAddress"
             value={formData.fullAddress}
             onChange={handleChange}
+            disabled={isSubmitting}
             rows={4}
-            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors disabled:bg-gray-100"
             placeholder="Enter your complete delivery address"
           />
         </div>
@@ -270,11 +316,23 @@ export default function SmartCheckout() {
         <motion.button
           type="submit"
           disabled={isSubmitting || cartItems.length === 0}
-          className="w-full py-4 px-6 bg-gray-900 text-white font-sans font-semibold rounded-md hover:bg-gray-800 transition duration-300 disabled:bg-gray-400 uppercase tracking-wide"
+          className="w-full py-4 px-6 bg-gray-900 text-white font-sans font-semibold rounded-md hover:bg-gray-800 transition duration-300 disabled:bg-gray-400 uppercase tracking-wide flex items-center justify-center gap-2"
           whileHover={!isSubmitting ? { scale: 1.02 } : {}}
           whileTap={!isSubmitting ? { scale: 0.98 } : {}}
         >
-          {isSubmitting ? 'Processing Order...' : `Place Order (৳${finalTotal})`}
+          {isSubmitting ? (
+            <>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              >
+                <Loader className="w-4 h-4" />
+              </motion.div>
+              Proceed to Payment...
+            </>
+          ) : (
+            `Pay Now (৳${finalTotal})`
+          )}
         </motion.button>
 
         {/* Continue Shopping Link */}
