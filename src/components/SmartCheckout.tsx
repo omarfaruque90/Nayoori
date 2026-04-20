@@ -5,16 +5,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/lib/AuthContext';
 import { supabase } from '@/lib/supabase/client';
 import { useCart } from '@/lib/CartContext';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
+interface PaymentInitResponse {
+  success: boolean;
+  redirectUrl?: string;
+  transactionId?: string;
+  error?: string;
+}
 
 export default function SmartCheckout() {
   const { user, userFullName, userEmail } = useAuth();
   const { cartItems, cartTotal, clearCart } = useCart();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isInitializingPayment, setIsInitializingPayment] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
@@ -43,6 +52,7 @@ export default function SmartCheckout() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMessage(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,9 +60,11 @@ export default function SmartCheckout() {
     if (cartItems.length === 0) return;
 
     setIsSubmitting(true);
+    setErrorMessage(null);
 
     try {
-      const { data, error } = await supabase
+      // Step 1: Create order in Supabase
+      const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert([
           {
@@ -65,26 +77,62 @@ export default function SmartCheckout() {
             cart_items: cartItems,
             total_amount: finalTotal,
             status: 'Pending',
+            payment_status: 'pending',
           },
         ])
         .select()
         .single();
 
-      if (error) throw error;
+      if (orderError) throw orderError;
 
-      setOrderId(data?.id || 'unknown');
-      setShowSuccess(true);
+      const newOrderId = orderData?.id;
+      setOrderId(newOrderId);
+
+      // Step 2: Initialize payment with SSLCommerz
+      setIsInitializingPayment(true);
+
+      const paymentResponse = await fetch('/api/payment/init', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: newOrderId,
+          userId: user?.id || null,
+          totalAmount: finalTotal,
+          deliveryCharge,
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          customerPhone: formData.phoneNumber,
+          customerAddress: formData.fullAddress,
+          deliveryArea: formData.deliveryArea,
+        }),
+      });
+
+      const paymentData: PaymentInitResponse = await paymentResponse.json();
+
+      if (!paymentResponse.ok || !paymentData.success) {
+        throw new Error(paymentData.error || 'Failed to initialize payment');
+      }
+
+      // Step 3: Clear cart and redirect to SSLCommerz
       clearCart();
+      setShowSuccess(true);
 
-      // Redirect after 2 seconds
+      // Redirect to SSLCommerz after short delay
       setTimeout(() => {
-        router.push(`/success?orderId=${data?.id}&total=${finalTotal}`);
-      }, 2000);
+        if (paymentData.redirectUrl) {
+          window.location.href = paymentData.redirectUrl;
+        } else {
+          throw new Error('No redirect URL from payment gateway');
+        }
+      }, 1000);
     } catch (error: any) {
-      console.error('Order submission failed:', error);
-      alert('Order submission failed. Please try again.');
+      console.error('Checkout error:', error);
+      setErrorMessage(
+        error.message || 'Checkout failed. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
+      setIsInitializingPayment(false);
     }
   };
 
