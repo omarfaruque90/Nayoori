@@ -81,7 +81,7 @@ Functions:
   3. Records payment method and timestamp
   4. Ensures idempotency (no duplicate updates)
 
-**Files**: 
+**Files**:
 - `src/app/api/payment/init/route.ts`
 - `src/app/api/payment/success/route.ts`
 - `src/app/api/payment/fail/route.ts`
@@ -291,8 +291,8 @@ scripts/
 ### Database Verification
 ```sql
 -- Check order payment status
-SELECT id, payment_status, transaction_id, paid_at 
-FROM orders 
+SELECT id, payment_status, transaction_id, paid_at
+FROM orders
 ORDER BY created_at DESC LIMIT 5;
 ```
 

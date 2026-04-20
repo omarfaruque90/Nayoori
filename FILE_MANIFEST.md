@@ -95,7 +95,7 @@
 ✅ src/components/SmartCheckout.tsx
    BEFORE: 200 lines (form with auto-fill)
    AFTER:  280 lines (added payment flow)
-   
+
    Changes:
    - Added isInitializingPayment state
    - Added payment initialization logic
@@ -112,7 +112,7 @@
 ✅ src/app/checkout/page.tsx
    BEFORE: 180 lines (checkout with forms)
    AFTER:  250 lines (added payment integration)
-   
+
    Changes in GuestCheckout:
    - Added email field
    - Added payment initialization logic

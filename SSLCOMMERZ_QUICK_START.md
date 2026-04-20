@@ -195,7 +195,7 @@ Order Confirmed     Show Error Page     Checkout
 Run in Supabase SQL Editor:
 
 ```sql
-SELECT 
+SELECT
   id as order_id,
   full_name,
   total_amount,

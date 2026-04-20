@@ -19,8 +19,8 @@ CREATE INDEX IF NOT EXISTS orders_transaction_id_idx ON orders(transaction_id);
 -- ============================================
 
 /*
-SELECT column_name, data_type, is_nullable, column_default 
-FROM information_schema.columns 
+SELECT column_name, data_type, is_nullable, column_default
+FROM information_schema.columns
 WHERE table_name = 'orders'
 ORDER BY ordinal_position;
 */
