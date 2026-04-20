@@ -64,15 +64,17 @@ export default async function RootLayout({
       <body className="font-sans min-h-full flex flex-col bg-[#fdfbf7] custom-cursor-enabled overflow-x-hidden" suppressHydrationWarning>
         <FaviconInjector />
         <CustomCursor />
-        <CartProvider>
-          <Header />
-          <div className="flex-grow flex flex-col overflow-x-hidden" suppressHydrationWarning>
-            {children}
-          </div>
-          <Footer />
-          <CartDrawer />
-          <WhatsAppButton />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Header />
+            <div className="flex-grow flex flex-col overflow-x-hidden" suppressHydrationWarning>
+              {children}
+            </div>
+            <Footer />
+            <CartDrawer />
+            <WhatsAppButton />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
