@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update order
-    const { error: updateError } = await supabase
+    const { data: orderData, error: updateError } = await supabase
       .from('orders')
       .update({
         payment_status: 'paid',
@@ -153,10 +153,32 @@ export async function POST(request: NextRequest) {
         paid_at: new Date().toISOString(),
         status: 'Confirmed',
       })
-      .eq('id', orderId);
+      .eq('id', orderId)
+      .select()
+      .single();
 
     if (updateError) {
       console.error('Failed to update order:', updateError);
+    }
+
+    // Send order confirmation email with invoice
+    if (orderData) {
+      try {
+        await sendOrderConfirmationEmail({
+          id: orderData.id,
+          full_name: orderData.full_name,
+          email: orderData.email,
+          phone_number: orderData.phone_number,
+          items: orderData.items || [],
+          total_amount: orderData.total_amount,
+          delivery_area: orderData.delivery_area,
+          full_address: orderData.full_address,
+          created_at: orderData.created_at,
+          transaction_id: transactionId,
+        });
+      } catch (emailError) {
+        console.error('Failed to send order confirmation email:', emailError);
+      }
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
