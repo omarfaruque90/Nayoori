@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendOrderConfirmationEmail } from '@/lib/notifications';
 
 // Initialize Supabase server client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
