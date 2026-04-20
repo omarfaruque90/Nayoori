@@ -183,6 +183,47 @@ function GuestCheckout({
 
   return (
     <div className="flex-grow container mx-auto px-6 py-12">
+      {/* Loading Spinner - Payment Initialization */}
+      <AnimatePresence>
+        {isInitializingPayment && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-lg p-8 flex flex-col items-center gap-4"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              >
+                <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full" />
+              </motion.div>
+              <p className="text-gray-900 font-medium">Initializing payment...</p>
+              <p className="text-sm text-gray-600">Redirecting to payment gateway</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Error Message */}
+      <AnimatePresence>
+        {errorMessage && (
+          <motion.div
+            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <p className="text-red-700 font-medium">{errorMessage}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Link href="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-sans text-sm tracking-widest uppercase mb-8">
         <ArrowLeft className="w-4 h-4" /> Back to Shop
       </Link>
@@ -205,8 +246,23 @@ function GuestCheckout({
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans"
+                disabled={isSubmitting}
+                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans disabled:bg-gray-100"
                 placeholder="Enter your full name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-sans tracking-widest uppercase text-gray-500">Email</label>
+              <input
+                required
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={isSubmitting}
+                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans disabled:bg-gray-100"
+                placeholder="Enter your email address"
               />
             </div>
 
@@ -218,7 +274,8 @@ function GuestCheckout({
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleChange}
-                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans"
+                disabled={isSubmitting}
+                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans disabled:bg-gray-100"
                 placeholder="e.g. 017XXXXXXXX"
               />
             </div>
@@ -229,7 +286,8 @@ function GuestCheckout({
                 name="deliveryArea"
                 onChange={handleChange}
                 value={formData.deliveryArea}
-                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans appearance-none"
+                disabled={isSubmitting}
+                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans appearance-none disabled:bg-gray-100"
               >
                 <option value="Dhaka">Inside Dhaka - ৳80</option>
                 <option value="Outside Dhaka">Outside Dhaka - ৳150</option>
@@ -244,7 +302,8 @@ function GuestCheckout({
                 rows={4}
                 value={formData.fullAddress}
                 onChange={handleChange}
-                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans resize-none"
+                disabled={isSubmitting}
+                className="w-full p-4 bg-white border border-gray-200 rounded-none shadow-sm focus:border-gray-900 focus:ring-0 outline-none transition-colors font-sans resize-none disabled:bg-gray-100"
                 placeholder="Enter your apartment, street, and area details"
               ></textarea>
             </div>
