@@ -89,8 +89,9 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Cart Icon */}
+        {/* Cart Icon & Auth */}
         <div className="flex items-center gap-4">
+          <GoogleLoginButton />
           <button 
             onClick={openCart} 
             className="relative p-3 -mr-3 text-gray-700 hover:text-gray-900 transition-colors"
