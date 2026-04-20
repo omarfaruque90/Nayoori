@@ -5,7 +5,7 @@
 Your Nayoori store now has automatic email notifications with PDF invoices! When a customer completes payment, they'll automatically receive:
 
 1. ✅ Professional order confirmation email
-2. ✅ PDF invoice attachment  
+2. ✅ PDF invoice attachment
 3. ✅ Invoice stored in Supabase Storage
 4. ✅ Tracking link in email
 
@@ -13,7 +13,7 @@ Your Nayoori store now has automatic email notifications with PDF invoices! When
 
 ## 📋 What Was Added
 
-### 1. **Email Templates** 
+### 1. **Email Templates**
 **File**: `src/components/email/OrderConfirmationEmail.tsx`
 
 React-based responsive email template with:
@@ -25,7 +25,7 @@ React-based responsive email template with:
 - Professional styling with warm beige theme
 
 ### 2. **PDF Invoice Generator**
-**Files**: 
+**Files**:
 - `src/lib/invoices/generateInvoice.tsx` - PDF document component
 - `src/lib/invoices/utils.ts` - Invoice generation utilities
 
@@ -164,7 +164,7 @@ npm run dev
 
 ```sql
 -- View orders with invoices
-SELECT 
+SELECT
   id,
   full_name,
   email,
@@ -288,7 +288,7 @@ export async function sendShippingNotificationEmail(
 
 ### "RESEND_API_KEY not configured"
 
-**Solution**: 
+**Solution**:
 - Add to `.env.local`: `RESEND_API_KEY=re_xxxxx`
 - Restart dev server: `npm run dev`
 - Check you have correct key from Resend dashboard
@@ -338,7 +338,7 @@ export async function sendShippingNotificationEmail(
 
 ```sql
 -- View email sending history
-SELECT 
+SELECT
   id,
   order_id,
   recipient_email,
@@ -350,7 +350,7 @@ ORDER BY sent_at DESC
 LIMIT 50;
 
 -- Count successful emails
-SELECT 
+SELECT
   status,
   COUNT(*) as count
 FROM email_notifications

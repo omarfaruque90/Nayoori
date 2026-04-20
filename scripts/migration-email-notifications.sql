@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS email_notifications (
   status TEXT DEFAULT 'sent', -- 'sent', 'failed', 'bounced'
   error_message TEXT,
   created_at TIMESTAMP DEFAULT now(),
-  
+
   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
 
@@ -60,8 +60,8 @@ CREATE POLICY "Users can view their own email notifications"
 -- Verification queries (run after migration to check everything is set up)
 /*
 -- Verify columns were added
-SELECT column_name, data_type, is_nullable 
-FROM information_schema.columns 
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
 WHERE table_name = 'orders' AND column_name IN ('invoice_url', 'payment_status', 'transaction_id', 'paid_at');
 
 -- Verify email_notifications table

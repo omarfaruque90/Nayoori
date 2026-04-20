@@ -83,7 +83,7 @@ export async function generateAndSaveInvoice(invoiceData: InvoiceData): Promise<
 export async function generateInvoiceBuffer(invoiceData: InvoiceData): Promise<Buffer | null> {
   try {
     const pdfBlob = await ReactPDF.pdf(React.createElement(InvoicePDF, { data: invoiceData })).toBlob();
-    
+
     // Convert Blob to Buffer
     const arrayBuffer = await pdfBlob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);

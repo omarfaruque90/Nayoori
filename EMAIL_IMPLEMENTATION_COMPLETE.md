@@ -351,8 +351,8 @@ npm install resend react-email @react-pdf/renderer
 ### Track Email Sends (SQL)
 ```sql
 -- View recent orders with emails sent
-SELECT 
-  id, full_name, email, 
+SELECT
+  id, full_name, email,
   payment_status, invoice_url, paid_at
 FROM orders
 WHERE payment_status = 'paid'

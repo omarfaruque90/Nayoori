@@ -176,8 +176,8 @@ RESEND_API_KEY=re_xxxxxxxxxxxxx
 
 **In Supabase SQL Editor**:
 ```sql
-SELECT 
-  id, email, payment_status, 
+SELECT
+  id, email, payment_status,
   invoice_url, paid_at
 FROM orders
 WHERE payment_status = 'paid'

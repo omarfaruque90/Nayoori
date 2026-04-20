@@ -242,30 +242,30 @@ orders (
   -- Core
   id UUID PRIMARY KEY,
   user_id UUID,
-  
+
   -- Order Details
   full_name TEXT,
   email TEXT,
   phone_number TEXT,
   items JSONB[],
   total_amount NUMERIC,
-  
+
   -- Delivery
   delivery_area TEXT,
   full_address TEXT,
-  
+
   -- Status
   status TEXT (Pending/Confirmed/Shipped/Delivered/Payment Failed),
   payment_status TEXT (pending/paid/failed/cancelled),
-  
+
   -- Payment
   transaction_id TEXT,
   payment_method TEXT,
   paid_at TIMESTAMP,
-  
+
   -- Invoice
   invoice_url TEXT,  ← NEW
-  
+
   -- Timestamps
   created_at TIMESTAMP,
   updated_at TIMESTAMP
